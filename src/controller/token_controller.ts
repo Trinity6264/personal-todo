@@ -5,6 +5,7 @@ import tokenModel from "../models/token_model";
 import NotFound from "../error/not_found";
 import jwt from "jsonwebtoken";
 import UnAuthorized from "../error/unauthorized";
+import generateNewAccessToken from "../helper/generate_tokens";
 
 interface DecodedTokenInterface {
   id: string;
@@ -51,21 +52,9 @@ const refreshToken = AsyncWrapper(
     // Assuming you have the necessary logic to generate a new access token
     //   const newAccessToken = generateNewAccessToken(userId); // Replace with your actual logic for generating an access token
 
-    const accessToken = jwt.sign(
-      "newAccessToken",
-      process.env.JWT_ACCESS_SECRET as string,
-      {
-        expiresIn: "15m",
-      }
+    const { accessToken, refreshToken } = generateNewAccessToken(
+      userId as string
     );
-    const refreshToken = jwt.sign(
-      "newAccessToken",
-      process.env.JWT_REFRESH_SECRET as string,
-      {
-        expiresIn: "30days",
-      }
-    );
-
     return res.status(200).json({
       status: true,
       msg: "Token refresh successfully",

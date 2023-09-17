@@ -1,12 +1,11 @@
 import { Schema, model } from "mongoose";
-import BadRequest from "../error/bad_request";
-import CustomError from "../error/custom_error";
 import CustomMongooseError from "../error/custom_mongoose_error";
 
 export interface UserInterface {
   username: string;
   email: string;
   password: string;
+  _id?: string;
 }
 
 const userSchema = new Schema<UserInterface>(

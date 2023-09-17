@@ -13,7 +13,7 @@
       "ESNext"
     ],
     "module": "esnext",
-    "target": "ES2021",
+    "target": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
     "allowImportingTsExtensions": true,

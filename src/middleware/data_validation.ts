@@ -24,6 +24,7 @@ const signUpValidation: Array<ValidationChain> = [
       "Password must be at least 6 characters and contain at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol"
     ),
 ];
+
 const loginValidation: Array<ValidationChain> = [
   validator
     .body("email")
@@ -43,4 +44,13 @@ const loginValidation: Array<ValidationChain> = [
     ),
 ];
 
-export { signUpValidation, loginValidation };
+const refreshTokenValidation: Array<ValidationChain> = [
+  validator
+    .body("token")
+    .notEmpty()
+    .withMessage("Token is required")
+    .isJWT()
+    .withMessage("Invalid token"),
+];
+
+export { signUpValidation, loginValidation, refreshTokenValidation };

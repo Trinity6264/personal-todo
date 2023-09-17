@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import dbConnection from "./helper/db_connection";
 import userRouter from "./routers/users_router";
+import tokenRouter from "./routers/token_router";
 import { routeNotFound } from "./middleware/route_not_found";
 import errorHandler from "./middleware/error_handler";
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(`/api/v1/users`, userRouter);
+app.use(`/api/v1/token`, tokenRouter);
 
 app.use(routeNotFound);
 app.use(errorHandler);
