@@ -3,6 +3,8 @@ import cors from "cors";
 import morgan from "morgan";
 import dbConnection from "./helper/db_connection";
 import userRouter from "./routers/users_router";
+import { routeNotFound } from "./middleware/route_not_found";
+import errorHandler from "./middleware/error_handler";
 
 const app: Express = express();
 
@@ -15,16 +17,10 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-
-app.get("/", (req, res) => {  
-  res.send("Hello world");
-})
-
 app.use(`/api/v1/users`, userRouter);
 
-app.use("/", (req, res) => {
-  res.send("ROute not found");
-});
+app.use(routeNotFound);
+app.use(errorHandler);
 
 const startServer = async () => {
   try {
