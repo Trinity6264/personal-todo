@@ -18,7 +18,29 @@ const signUpValidation: Array<ValidationChain> = [
     .notEmpty()
     .withMessage("Password is required")
     .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters"),
+    .withMessage("Password must be at least 6 characters")
+    .isStrongPassword()
+    .withMessage(
+      "Password must be at least 6 characters and contain at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol"
+    ),
+];
+const loginValidation: Array<ValidationChain> = [
+  validator
+    .body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Email is invalid"),
+  validator
+    .body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters")
+    .isStrongPassword()
+    .withMessage(
+      "Password must be at least 6 characters and contain at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol"
+    ),
 ];
 
-export { signUpValidation };
+export { signUpValidation, loginValidation };

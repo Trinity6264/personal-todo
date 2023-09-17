@@ -1,4 +1,7 @@
 import { Schema, model } from "mongoose";
+import BadRequest from "../error/bad_request";
+import CustomError from "../error/custom_error";
+import CustomMongooseError from "../error/custom_mongoose_error";
 
 export interface UserInterface {
   username: string;
@@ -6,7 +9,7 @@ export interface UserInterface {
   password: string;
 }
 
-const UserSchema = new Schema<UserInterface>(
+const userSchema = new Schema<UserInterface>(
   {
     username: {
       type: String,
@@ -25,14 +28,20 @@ const UserSchema = new Schema<UserInterface>(
   { timestamps: true }
 );
 
-UserSchema.pre("save", function (next) {  
-  if (this.isModified("password")) {
-    this.password = Bun.hash(this.password).toString();
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
   }
-  next(Error("Password must be at least hgjgjgjg"));
+
+  try {
+    this.password = await Bun.password.hash(this.password);
+    next();
+  } catch (error) {
+    console.error(error);
+    throw new CustomMongooseError("Internal server error");
+  }
 });
 
-
-const userModel = model<UserInterface>("Users", UserSchema);
+const userModel = model<UserInterface>("Users", userSchema);
 
 export default userModel;
