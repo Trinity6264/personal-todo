@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import BadRequest from "../error/bad_request";
 import AsyncWrapper from "../helper/async_wrapper";
 import verifyPassword from "../helper/verify_password";
-import tokenModel from "../models/token_model";
 import UserModel, { UserInterface } from "../models/user_model";
 
 interface CustomResponse {
@@ -44,24 +43,24 @@ const loginUser = AsyncWrapper(
       email,
     });
 
-    if (!isUserExist) {
-      throw new BadRequest("User does not exist");
-    }
+    // if (!isUserExist) {
+    //   throw new BadRequest("User does not exist");
+    // }
 
-    const isPasswordValid = await verifyPassword(
-      password,
-      isUserExist.password
-    );
+    // const isPasswordValid = await verifyPassword(
+    //   password,
+    //   isUserExist.password
+    // );
 
-    if (!isPasswordValid) {
-      throw new BadRequest("Invalid user password");
-    }
+    // if (!isPasswordValid) {
+    //   throw new BadRequest("Invalid user password");
+    // }
 
     // Assuming you have the necessary logic to generate a new access token
-    if (!isUserExist._id) throw new BadRequest("User does not exist");
+    // if (!isUserExist._id) throw new BadRequest("User does not exist");
 
     console.log("====================================");
-    console.log(isUserExist._id);
+    // console.log(isUserExist._id);
     console.log("====================================");
 
     // const { accessToken, refreshToken } = generateNewAccessToken(
@@ -74,15 +73,29 @@ const loginUser = AsyncWrapper(
       username: "exampleUser",
     };
 
-    const accessToken = jwt.sign(payload, secretKey);
-    const refreshToken = jwt.sign(payload, secretKey);
+    // const accessToken = jwt.sign(payload, secretKey);
+    // const refreshToken = jwt.sign(payload, secretKey);
+    const accessToken = jwt.sign(
+      payload,
+      secretKey,
+      {
+        expiresIn: "30mins",
+      }
+    );
+    const refreshToken = jwt.sign(
+      payload,
+      secretKey,
+      {
+        expiresIn: "30d",
+      }
+    );
 
     // await tokenModel.findOneAndDelete({ userId: isUserExist._id });
-    const token = new tokenModel({
-      userId: isUserExist._id,
-      refreshToken: refreshToken,
-    });
-   await token.save();
+    // const token = new tokenModel({
+    //   userId: isUserExist._id,
+    //   refreshToken: refreshToken,
+    // });
+    // await token.save();
 
     return res.status(StatusCodes.OK).json({
       status: true,
